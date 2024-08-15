@@ -2,13 +2,16 @@
 import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 import SignInTextAndDivider from "./_textSignin/SignInTextAndDivider";
-
+import { signInWithEmailAndPassword, signInWithPopup} from 'firebase/auth';
+import {auth, provider} from '../../firebase';
+import { useRouter } from "next/navigation";
 
 export default function Page() {
-  const [signinEmail, setEmail] = useState('');
-  const [signinPassword, setPassword] = useState('');
+  const router = useRouter();
+  const [signinEmail, setEmail] = useState('thanht24@uw.edu');
+  const [signinPassword, setPassword] = useState('123456');
   const [error, setError] = useState('');
-  function handleSignIn(e){
+  async function handleSignIn(e){
     e.preventDefault();
     // Perform sign in logic here
     if(!signinEmail){
@@ -19,11 +22,50 @@ export default function Page() {
       setError('Password is required');
       return;
     }
-    if(!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
-      setError('Invalid email address');
-      return;
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth, signinEmail, signinPassword
+      );
+      const user = userCredential.user;
+      console.log(user);
+      router.replace('/landing');
+      
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      switch (errorCode) {
+        case "auth/invalid-email":
+          setError("This email address is invalid.");
+          break;
+        case "auth/user-disabled":
+          setError(
+            "This email address is disabled by the administrator."
+          );
+          break;
+        case "auth/user-not-found":
+          setError("This email address is not registered.");
+          break;
+        case "auth/wrong-password":
+          setError("The password is invalid or the user does not have a password.")
+          break;
+        default:
+          console.log(errorMessage);
+          break;
+      }
     }
     setError('');
+  }
+  async function handleGoogleSignIn(e){
+    e.preventDefault();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      router.replace('/landing');
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorMessage);
+    }
   }
   return (
     <Box height='85vh' width='100%' display='flex'
@@ -45,7 +87,9 @@ export default function Page() {
             {error && error}
           </p>
         </Box>
-        <SignInTextAndDivider handleSignIn={handleSignIn}/>
+        <SignInTextAndDivider handleSignIn={handleSignIn}
+        handleGoogleSignIn={handleGoogleSignIn}
+        />
       </Box>
     </Box>
   )

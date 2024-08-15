@@ -1,9 +1,12 @@
 "use client"
 import Inventory from "../_sections/Inventory";
 import SearchField from "../_components/SearchField";
-import { Box, Container, Divider, Typography } from "@mui/material";
+import { Box, Container} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { onAuthStateChanged } from "firebase/auth";
+import {auth} from '../../firebase';
+
 
 
 const StyledBody = {
@@ -20,15 +23,20 @@ const StyledBody = {
 export default function Page() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setIsAuthenticated(false);
-      router.push('/'); // Redirect to home page
-    }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if(!user){
+        router.push('/signin');
+      }else{
+        setIsAuthenticated(true);
+      }
+      setLoading(false);
+    })
+    return () => unsubscribe();
   }, [router]);
-  if (!isAuthenticated) {
-    return null; // Render nothing while redirecting
+  if(loading){
+    return <div>Loading...</div>
   }
   return (
     <>
@@ -37,7 +45,7 @@ export default function Page() {
           <SearchField/>
         </Box>
       </Container>
-      <Inventory/>
+      {isAuthenticated ? <Inventory/> : null }
     </>
   )
 }

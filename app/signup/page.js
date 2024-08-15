@@ -1,21 +1,25 @@
 "use client"
 import { Box, Typography } from "@mui/material";
-
 import MyButtonAndDivider from "./_textSignUp/MyButtonAndDivider";
 import { useState } from "react";
+import {createUserWithEmailAndPassword, updateProfile, signInWithPopup} from 'firebase/auth';
+import {auth, provider} from '../../firebase';
+import { useRouter } from "next/navigation";
+import {db} from '../../firebase';
+
 
 
 export default function Page() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const router = useRouter();
+  const [username, setUsername] = useState('thanh');
+  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState('thanht24@uw.edu');
+  const [confirmPassword, setConfirmPassword] = useState('123456');
   const [error, setError] = useState('');
-  
-  function handleSubmit(e){
+
+  async function handleSubmit(e){
     e.preventDefault();
     // Perform sign up logic here
-    console.log(username);
     if(!username){
       setError('Username is required');
       return;
@@ -26,23 +30,64 @@ export default function Page() {
     }
     if(!confirmPassword){
       setError('Confirm Password is required');
-      return;
+      return ;
     }
     if(!email){
       setError('Email is required');
-      return;
-    }
-    if(!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
-      setError('Invalid email address');
-      return;
-    }
+      return ;
+    } 
     if(password !== confirmPassword){
       setError('Passwords do not match');
       return;
     }
-    setError('');
-  }
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,email, password
+      );
+      const user = userCredential.user;
 
+      await updateProfile(user, { displayName: username });
+
+      await db.collection('users').doc(user.uid).set({
+        username,
+        email,
+      }); 
+      router.push('/signin');
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      switch (errorCode) {
+        case "auth/weak-password":
+          setError("The password is too weak.");
+          break;
+        case "auth/email-already-in-use":
+          setError(
+            "This email address is already in use by another account."
+          );
+        case "auth/invalid-email":
+          setError("This email address is invalid.");
+          break;
+        case "auth/operation-not-allowed":
+          setError("Email/password accounts are not enabled.");
+          break;
+        default:
+          console.log(errorMessage);
+          break;
+      }
+    }
+  }
+  async function handleGoogleSignUp(e){
+    e.preventDefault();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      router.replace('/landing');
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorMessage);
+    }
+  }
   return (
     <Box height='85vh' width='100%' display='flex'
     justifyContent='center' alignItems='center' sx={{backgroundImage: 'url(/background.jpg)'}}
@@ -57,9 +102,9 @@ export default function Page() {
         </Typography>
           <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username"
           style={{width: '75%', height: '2.2rem', marginLeft: '35px',marginBottom: '3px' ,borderRadius: 20, paddingLeft: '20px', fontSize: '15px'}}/>
-          <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" type="password"
+          <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" type="password" minLength='6'
           style={{width: '75%', height: '2.2rem', marginLeft: '35px', marginBottom: '3px' ,borderRadius: 20, paddingLeft: '20px', fontSize: '15px'}}/>
-          <input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm Password" type="password"
+          <input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm Password" type="password" minLength='6'
           style={{width: '75%', height: '2.2rem', marginLeft: '35px',  marginBottom: '3px' ,borderRadius: 20, paddingLeft: '20px', fontSize: '15px'}}/>
           <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" 
           style={{width: '75%', height: '2.2rem', marginLeft: '35px', borderRadius: 20, paddingLeft: '20px', fontSize: '15px'}}/>
@@ -67,7 +112,7 @@ export default function Page() {
             {error && error}
           </p>
         </Box>
-          <MyButtonAndDivider handleSubmit={handleSubmit}/>
+          <MyButtonAndDivider handleSubmit={handleSubmit} handleGoogleSignUp={handleGoogleSignUp}/>
       </Box>
     </Box>
   )

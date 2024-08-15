@@ -6,9 +6,7 @@ import {collection, deleteDoc, onSnapshot, query, doc } from 'firebase/firestore
 import {db} from '../../firebase';
 import EmptyData from "./EmptyData";
 import Loading from "./Loading";
-import { toast } from "react-toastify";
 import TableHeader from "../_table/TableHeader";
-import TableCard from "../_table/TableCard";
 import MyModal from "./MyModal";
 import RecipeGenerator from "../_RecipeGenerator/RecipeGenerator";
 import MyTableBody from "../_table/MyTableBody";
@@ -78,9 +76,8 @@ export default function Display() {
     const handleDeletePage = async (id) => {
       try {
         await deleteDoc(doc(db, 'inventory', id));
-        toast.success('Document deleted successfully');
       } catch (error) {
-        toast.error('Error deleting document');
+        console.error('Error deleting document');
       }
     };
   // Read data from firebase

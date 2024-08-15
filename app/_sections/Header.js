@@ -58,7 +58,6 @@ export default function Header() {
     };*/
     function handleSignOut(){
         signOut(auth).then(() => {
-            localStorage.removeItem('token');
             router.push('/')
         }).catch((error) => {
             console.error('Sign Out Failed:', error);
