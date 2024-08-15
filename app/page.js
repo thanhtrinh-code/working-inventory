@@ -5,32 +5,27 @@ import Image from "next/image";
 
 const StyledBody = {
   bgcolor: 'white',
-  height: '90vh',
-  mt: 3,
+  height: '85vh',
+  width: '100%',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   flexDirection: 'column',
   textAlign: 'center',
+  backgroundImage: 'url(/background.jpg)', // Background image
 }
 const StyledImage = {
   height: '37vh',
   width: '65vh',
-  objectFit: 'cover',
   borderRadius: '8px',
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  transition: 'transform 0.3s ease-in-out',
 }
 // Home Screen
 export default function Page() {
   return (
-    <>
-      <Container>
-        <Box sx={StyledBody}>
-          <Body/>
-          <Image width={500} height={500} src='/headPage.jpg' alt='Head Page Image' style={StyledImage}/>
-        </Box>
-      </Container>
-    </>
+      <Box sx={StyledBody}>
+        <Body/>
+        <Image width={500} height={500} src='/headPage.jpg' alt='Head Page Image' style={StyledImage}/>
+      </Box>
   );
 }

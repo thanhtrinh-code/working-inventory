@@ -42,7 +42,7 @@ export default function Header() {
     const pathname = usePathname();
     const router = useRouter();
     
-    function handleNext(){
+    /*function handleNext(){
         signInWithPopup(auth, provider).then((result) => {
             const credential = GoogleAuthProvider.credentialFromResult(result);
             const token = credential.accessToken;
@@ -55,10 +55,7 @@ export default function Header() {
             const email = error.customerData.email;
             const credential = GoogleAuthProvider.credentialFromError(error);
         })
-    };
-    function handleSignUp(){
-        router.push('/signup');
-    }
+    };*/
     function handleSignOut(){
         signOut(auth).then(() => {
             localStorage.removeItem('token');
@@ -81,10 +78,10 @@ export default function Header() {
         <Box sx={StyleMenus}>
             {pathname === '/' && (
             <>
-                <Button variant='outlined' sx={StylesSignIn} onClick={handleNext}>
+                <Button variant='outlined' sx={StylesSignIn} onClick={() => router.push('/signin')}>
                     Sign In
                 </Button>
-                <Button variant='contained' sx={StyleGetStarted} onClick={handleSignUp}>
+                <Button variant='contained' sx={StyleGetStarted} onClick={() => router.push('/signup')}>
                     Get Started
                 </Button>
             </>
@@ -97,8 +94,20 @@ export default function Header() {
             {
                 pathname === '/signup' && (
                     <>
-                <Button variant='outlined' sx={StylesSignIn} onClick={handleNext}>
+                <Button variant='outlined' sx={StylesSignIn} onClick={() => router.push('/signin')}>
                     Sign In
+                </Button>
+                <Button variant='contained' sx={StyleGetStarted} onClick={() => router.push('/')}>
+                    Back To Home Page
+                </Button>
+            </>
+                )
+            }
+            {
+                pathname === '/signin' && (
+                    <>
+                <Button variant='outlined' sx={StylesSignIn} onClick={() => router.push('/signup')}>
+                    Sign Up
                 </Button>
                 <Button variant='contained' sx={StyleGetStarted} onClick={() => router.push('/')}>
                     Back To Home Page

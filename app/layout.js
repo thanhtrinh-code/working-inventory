@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
         <main>
           {children}
         </main>
-        <Divider sx={{ my: '10px', pt: '4px', position: 'fixed', bottom: '60px', width: '100%' }} />
+        <Divider sx={{ my: '10px', pt: '4px', position: 'fixed', bottom: '60px', width: '100%', zIndex: 5 }} />
         <Footer/>
       </body>
     </html>

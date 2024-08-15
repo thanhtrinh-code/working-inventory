@@ -11,7 +11,7 @@ export default function Body() {
             fontWeight: 'bold',
             lineHeight: '1.1',
             }}>
-            Don &apos; t know what is in your inventory? <br/>
+            Don&apos;t know what is in your inventory? <br/>
             Welcome to the Inventory Management System!
         </Typography>
         <Typography variant="h5" sx={{
