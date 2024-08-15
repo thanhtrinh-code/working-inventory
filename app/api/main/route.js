@@ -8,7 +8,7 @@ import { retriever } from "@/app/utils/retriever";
 import { formatConvHistory } from "@/app/utils/formatConvHistory";
 import { NextResponse } from "next/server";
 
-const openAIApiKey = '231dsandma';
+const openAIApiKey = process.env.OPENAI_API_KEY;
 if(!openAIApiKey) {
     throw new Error('OPENAI_API_KEY environment variable is not set');
 }

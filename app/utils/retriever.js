@@ -2,7 +2,7 @@ import { SupabaseVectorStore } from '@langchain/community/vectorstores/supabase'
 import { OpenAIEmbeddings } from '@langchain/openai'
 import { createClient } from '@supabase/supabase-js'
 
-const openAIApiKey = '2312sdaskld';
+const openAIApiKey = process.env.OPENAI_API_KEY;
 if(!openAIApiKey) {
     throw new Error('OPENAI_API_KEY environment variable is not set');
 }
