@@ -3,8 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { CgBorderStyleSolid } from "react-icons/cg";
 import { IoMdCloseCircle } from "react-icons/io";
-export default function ChatBotHeader({handleCloseChat, handleCloseNotSave}) {
-  const [language, setLanguage] = useState('english');
+export default function ChatBotHeader({handleCloseChat, handleCloseNotSave, language, handleLanguageChange}) {
   return (
     <>
     <Box bgcolor='tomato' sx={{border: '1px solid black', borderRadius: '10px'}}>
@@ -22,7 +21,7 @@ export default function ChatBotHeader({handleCloseChat, handleCloseNotSave}) {
             </Box>
             </Box>
             <Box display='flex' justifyContent='center' height={40}>
-            <Select value={language} onChange={(e) => setLanguage(e.target.value)}
+            <Select value={language} onChange={handleLanguageChange}
             sx={{border: '2px solid black', borderRadius: '7px', backgroundColor: 'white', 
             mb: '5px', width: '150px', color: 'black', fontSize: '16px', mt: '5px', fontFamily: 'times'}}
             >
@@ -30,6 +29,7 @@ export default function ChatBotHeader({handleCloseChat, handleCloseNotSave}) {
               <MenuItem value="spanish">Spanish</MenuItem>
               <MenuItem value="mandarin">Mandarin</MenuItem>
               <MenuItem value="hindi">Hindi</MenuItem>
+              <MenuItem value="vietnamese">Vietnamese</MenuItem>
               </Select>
             </Box>
           </Box>

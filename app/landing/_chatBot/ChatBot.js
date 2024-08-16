@@ -8,6 +8,7 @@ import {addItemToInventory} from '@/app/_components/SearchField';
 
 
 export default function ChatBot({ openChat, handleCloseChat }) {
+  const [language, setLanguage] = useState('english');
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -105,6 +106,9 @@ export default function ChatBot({ openChat, handleCloseChat }) {
   function handleChangeMessage(e) {
     setMessage(e.target.value);
   }
+  function handleLanguageChange(e) {
+    setLanguage(e.target.value);
+  }
   return (
     <Modal
       open={openChat}
@@ -129,7 +133,9 @@ export default function ChatBot({ openChat, handleCloseChat }) {
           spacing={3}
           sx={{ backgroundColor: 'background.paper' }} // Background color for the chat container
         >
-          <ChatBotHeader handleCloseChat={handleCloseChat} handleCloseNotSave={handleCloseNotSave}/>
+          <ChatBotHeader handleCloseChat={handleCloseChat} handleCloseNotSave={handleCloseNotSave} language={language}
+          handleLanguageChange={handleLanguageChange}
+          />
           <Stack
             direction='column'
             spacing={2}
@@ -138,7 +144,7 @@ export default function ChatBot({ openChat, handleCloseChat }) {
             maxHeight='100%'
           >
             {messages.length > 0 ?
-             <ChatMessage messages={messages}/> : <NoChat/>
+             <ChatMessage messages={messages}/> : <NoChat language={language}/>
             }
             <div ref={messagesEndRef}/>
           </Stack>
