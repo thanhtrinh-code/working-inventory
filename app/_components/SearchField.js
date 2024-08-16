@@ -1,7 +1,7 @@
 "use client"
 import {Button, TextField} from '@mui/material';
 import { collection, addDoc } from 'firebase/firestore';
-import {db} from '../../firebase';
+import {auth, db} from '../../firebase';
 import { useState } from 'react';
 
 
@@ -74,10 +74,16 @@ export default function SearchField() {
 }
 
 export async function addItemToInventory(item) {
-  await addDoc(collection(db, 'inventory'), {
+  const userId = auth.currentUser.uid;
+  const userInventoryRef = collection(db, 'users', userId, 'inventory');
+  try {
+  await addDoc(userInventoryRef, {
     itemName: item.itemName[0].toUpperCase() + item.itemName.slice(1),  // Capitalize first letter
     department: item.department[0].toUpperCase() + item.department.slice(1), // Capitalize first letter
     quantity: item.quantity,
     createdAt: new Date(),
   });
+  }catch(err){
+    console.error('Error adding document: ', err);
+  }
 }

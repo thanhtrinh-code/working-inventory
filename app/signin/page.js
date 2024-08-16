@@ -27,7 +27,6 @@ export default function Page() {
         auth, signinEmail, signinPassword
       );
       const user = userCredential.user;
-      console.log(user);
       router.replace('/landing');
       
     } catch (error) {

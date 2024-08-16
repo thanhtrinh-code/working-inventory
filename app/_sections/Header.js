@@ -1,8 +1,13 @@
 "use client"
 import { Box, Button, Typography } from '@mui/material'
 import { usePathname, useRouter } from 'next/navigation'
-import {GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-import {auth, provider} from "@/firebase";
+import {onAuthStateChanged, signOut } from 'firebase/auth';
+import {auth, db} from "@/firebase";
+import { doc, getDoc } from 'firebase/firestore';
+import { useState } from 'react';
+
+
+
 
 
 const StyleHeader = {
@@ -41,21 +46,7 @@ const StylesSignIn = {
 export default function Header() {
     const pathname = usePathname();
     const router = useRouter();
-    
-    /*function handleNext(){
-        signInWithPopup(auth, provider).then((result) => {
-            const credential = GoogleAuthProvider.credentialFromResult(result);
-            const token = credential.accessToken;
-            localStorage.setItem('token', token);
-            const user = result.user;
-            router.push('/landing');
-        }).catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            const email = error.customerData.email;
-            const credential = GoogleAuthProvider.credentialFromError(error);
-        })
-    };*/
+    const [user, setUser] = useState(null);
     function handleSignOut(){
         signOut(auth).then(() => {
             router.push('/')
@@ -63,8 +54,27 @@ export default function Header() {
             console.error('Sign Out Failed:', error);
         });
     }
-
-  return (
+    if (pathname === '/landing') {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+              const userDocRef = doc(db, 'users', user.uid); // Use `user.uid` instead of `auth.currentUser.uid`
+              getDoc(userDocRef)
+                .then((docSnap) => {
+                  if (docSnap.exists()) {
+                    setUser(docSnap.data());
+                  } else {
+                    console.log('No such document!');
+                  }
+                })
+                .catch((error) => {
+                  console.error('Error getting document:', error);
+                });
+            } else {
+              console.log('No user is signed in.');
+            }
+          });
+      }
+    return (
     <Box sx={StyleHeader}>
         <Box>
 
@@ -86,9 +96,14 @@ export default function Header() {
             </>
             )}
             {pathname === '/landing' && (
+                <>
+                <p>
+                    Hi, {user?.username || ""}
+                </p>
                 <Button variant='contained' sx={StyleGetStarted} onClick={handleSignOut}>
                     Sign Out
                 </Button>
+                </>
             )}
             {
                 pathname === '/signup' && (

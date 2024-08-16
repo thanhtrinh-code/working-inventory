@@ -1,9 +1,9 @@
 "use client"
-import { Paper, TableContainer, Table, TableBody, TableHead, TableRow, TableCell, Box, TablePagination, Checkbox } from "@mui/material";
+import { Paper, TableContainer, Table, TableHead, Box, TablePagination } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import {collection, deleteDoc, onSnapshot, query, doc } from 'firebase/firestore';
-import {db} from '../../firebase';
+import {auth, db} from '../../firebase';
 import EmptyData from "./EmptyData";
 import Loading from "./Loading";
 import TableHeader from "../_table/TableHeader";
@@ -74,24 +74,34 @@ export default function Display() {
       }
     }
     const handleDeletePage = async (id) => {
+      const userId = auth.currentUser.uid;
+      const docRef = doc(db, 'users', userId, 'inventory', id);
       try {
-        await deleteDoc(doc(db, 'inventory', id));
+        await deleteDoc(docRef);
       } catch (error) {
         console.error('Error deleting document');
       }
     };
   // Read data from firebase
   useEffect(() => {
-    const q = query(collection(db, 'inventory'));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      let data = [];
-      querySnapshot.forEach((doc) => {
-        data.push({ id: doc.id, ...doc.data() });
+    const fetchUserInventory = () => {
+      const userId = auth.currentUser.uid;
+      
+      // Query to fetch the authenticated user's inventory
+      const q = query(collection(db, 'users', userId, 'inventory'));
+    
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        let data = [];
+        querySnapshot.forEach((doc) => {
+          data.push({ id: doc.id, ...doc.data() });
+        });
+        setRows(data);   // Assuming `setRows` is a state setter function for inventory data
+        setIsLoading(false); // Assuming `setIsLoading` is a state setter for loading state
       });
-      setRows(data);
-      setIsLoading(false);
-    })
-    return () => unsubscribe();
+    
+      return () => unsubscribe(); // Clean up the listener on component unmount
+    };
+    fetchUserInventory();
   }, [setRows, setIsLoading, openModal]);
   const emptyData = rows.length === 0;
   return (

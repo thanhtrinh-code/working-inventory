@@ -6,6 +6,7 @@ import {createUserWithEmailAndPassword, updateProfile, signInWithPopup} from 'fi
 import {auth, provider} from '../../firebase';
 import { useRouter } from "next/navigation";
 import {db} from '../../firebase';
+import { doc, setDoc } from "firebase/firestore";
 
 
 
@@ -48,10 +49,11 @@ export default function Page() {
 
       await updateProfile(user, { displayName: username });
 
-      await db.collection('users').doc(user.uid).set({
+      await setDoc(doc(db, 'users', user.uid), {
         username,
         email,
-      }); 
+      });
+      console.log('User account created & signed in!');
       router.push('/signin');
     } catch (error) {
       const errorCode = error.code;
