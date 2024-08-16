@@ -1,16 +1,27 @@
-import { Box, Button, Modal } from "@mui/material";
-import { useRef, useState } from "react";
+import { Box, Modal } from "@mui/material";
 import CameraInstruction from "./instruction/CameraInstruction";
-import Camera from "./camera/Camera";
 import CaptureBar from "./camera/CaptureBar";
+import { useRef, useState } from "react";
+import { Camera } from "react-camera-pro";
 
 
 export default function CameraDisplay({openCamera, handleCloseCamera}) {
+  const [begin, setBegin] = useState(false);
   const camera = useRef(null);
-  const [numOfCameras, setNumOfCameras] = useState(0);
+  const [numberOfCameras, setNumberOfCameras] = useState(0);
   const [image, setImage] = useState(null);
-  const [ratio, setRatio] = useState(9/16);
 
+  const [myFoto, setMyFoto] = useState('');
+
+  function handleBegin() {
+    setBegin(toggle => !toggle);
+    setNumberOfCameras(0);
+    setImage(null);
+    camera.current = null;
+  }
+  function handleCapture(){
+    const imageSrc = camera.current.takePhoto(); 
+  }
   return (
     <Modal
         open={openCamera}
@@ -19,11 +30,19 @@ export default function CameraDisplay({openCamera, handleCloseCamera}) {
         display='flex' justifyContent='center' alignItems='center'>
             <Box width='55vw' height='70vh' display='flex'>
               <Box bgcolor='tomato' width='20vw'>
-                  <CameraInstruction handleCloseCamera={handleCloseCamera}/>
+                  <CameraInstruction handleCloseCamera={handleCloseCamera} handleBegin={handleBegin} begin={begin}
+                  handleCapture={handleCapture}
+                  />
               </Box>
-              <Box bgcolor='yellow' width='35vw' height='100%'>
-                  <CaptureBar/>
-              </Box>
+              <Box bgcolor="yellow" width="35vw" height="100%" display="flex" flexDirection="column">
+              <Box bgcolor="black" flexGrow={1} position="relative">
+                {begin && ( <Camera ref={camera} numberOfCamerasCallback={setNumberOfCameras} facingMode="user" style={{ position: 'absolute', width: '100%', height: '100%' }} // Camera fills the green box
+                />)}
+                {image && (
+                  <img src={image} alt="Image" style={{ width: '100%', height: '100%' }} />
+                )}
+            </Box>
+          </Box>
             </Box>
         </Box>
     </Modal>
