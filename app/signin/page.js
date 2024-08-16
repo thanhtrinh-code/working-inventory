@@ -8,8 +8,8 @@ import { useRouter } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
-  const [signinEmail, setEmail] = useState('thanht24@uw.edu');
-  const [signinPassword, setPassword] = useState('123456');
+  const [signinEmail, setEmail] = useState('');
+  const [signinPassword, setPassword] = useState('');
   const [error, setError] = useState('');
   async function handleSignIn(e){
     e.preventDefault();

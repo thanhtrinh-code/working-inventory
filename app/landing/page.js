@@ -41,9 +41,9 @@ export default function Page() {
   return (
     <>
       <Container>
-        <Box sx={StyledBody}>
+        {isAuthenticated ? <Box sx={StyledBody}>
           <SearchField/>
-        </Box>
+        </Box> : null}
       </Container>
       {isAuthenticated ? <Inventory/> : null }
     </>

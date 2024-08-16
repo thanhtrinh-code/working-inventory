@@ -12,10 +12,10 @@ import { doc, setDoc } from "firebase/firestore";
 
 export default function Page() {
   const router = useRouter();
-  const [username, setUsername] = useState('thanh');
-  const [password, setPassword] = useState('123456');
-  const [email, setEmail] = useState('thanht24@uw.edu');
-  const [confirmPassword, setConfirmPassword] = useState('123456');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
   async function handleSubmit(e){
