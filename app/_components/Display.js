@@ -10,6 +10,7 @@ import TableHeader from "../_table/TableHeader";
 import MyModal from "./MyModal";
 import RecipeGenerator from "../_RecipeGenerator/RecipeGenerator";
 import MyTableBody from "../_table/MyTableBody";
+import { onAuthStateChanged } from "firebase/auth";
 
 
 const columns = [
@@ -77,6 +78,7 @@ export default function Display() {
       const userId = auth.currentUser.uid;
       const docRef = doc(db, 'users', userId, 'inventory', id);
       try {
+        console.log('deleting inventory for user:');
         await deleteDoc(docRef);
       } catch (error) {
         console.error('Error deleting document');
@@ -84,25 +86,31 @@ export default function Display() {
     };
   // Read data from firebase
   useEffect(() => {
-    const fetchUserInventory = () => {
-      const userId = auth.currentUser.uid;
-      
-      // Query to fetch the authenticated user's inventory
-      const q = query(collection(db, 'users', userId, 'inventory'));
-    
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        let data = [];
-        querySnapshot.forEach((doc) => {
-          data.push({ id: doc.id, ...doc.data() });
-        });
-        setRows(data);   // Assuming `setRows` is a state setter function for inventory data
-        setIsLoading(false); // Assuming `setIsLoading` is a state setter for loading state
-      });
-    
-      return () => unsubscribe(); // Clean up the listener on component unmount
-    };
-    fetchUserInventory();
-  }, [setRows, setIsLoading, openModal]);
+        let unsubscribe;
+        const handleAuthChange = (user) => {
+            if (user) {
+                const q2 = query(
+                    collection(db, "users", user.uid, "inventory"),
+                );
+                unsubscribe = onSnapshot(q2, (snapshot) => {
+                    setRows(snapshot.docs.map((doc) => ({
+                        id: doc.id,
+                        ...doc.data(),
+                    })));
+                    setIsLoading(false);
+                });
+            } else {
+                setIsLoading(false);
+                if (unsubscribe) unsubscribe();
+            }
+        };
+        onAuthStateChanged(auth, handleAuthChange);
+        return () => {
+            if (unsubscribe) unsubscribe();
+        };
+        }, []);
+
+
   const emptyData = rows.length === 0;
   return (
     <Box sx={StyledColumnsAndGenerator}>

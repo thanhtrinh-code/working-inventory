@@ -4,7 +4,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import {onAuthStateChanged, signOut } from 'firebase/auth';
 import {auth, db} from "@/firebase";
 import { doc, getDoc } from 'firebase/firestore';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 
@@ -47,33 +47,39 @@ export default function Header() {
     const pathname = usePathname();
     const router = useRouter();
     const [user, setUser] = useState(null);
-    function handleSignOut(){
-        signOut(auth).then(() => {
-            router.push('/')
-        }).catch((error) => {
+    async function handleSignOut(){
+        try {
+            await signOut(auth).then(() => {
+                router.push('/')
+            }).catch((error) => {
+                console.error('Sign Out Failed:', error);
+            });
+        } catch (error) {
             console.error('Sign Out Failed:', error);
-        });
+        }
     }
-    if (pathname === '/landing') {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-              const userDocRef = doc(db, 'users', user.uid); // Use `user.uid` instead of `auth.currentUser.uid`
-              getDoc(userDocRef)
-                .then((docSnap) => {
-                  if (docSnap.exists()) {
-                    setUser(docSnap.data());
-                  } else {
-                    console.log('No such document!');
-                  }
-                })
-                .catch((error) => {
-                  console.error('Error getting document:', error);
-                });
-            } else {
-              console.log('No user is signed in.');
-            }
-          });
-      }
+    useEffect(() => {
+        if (pathname === '/landing') {
+            const unsubscribe = onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    const userDocRef = doc(db, 'users', user.uid);
+                    try {
+                        const docSnap = await getDoc(userDocRef);
+                        if (docSnap.exists()) {
+                            setUser(docSnap.data());
+                        } else {
+                            console.log('No such document!');
+                        }
+                    } catch (error) {
+                        console.error('Error getting document:', error);
+                    }
+                }
+            });
+
+            // Cleanup subscription on unmount
+            return () => unsubscribe();
+        }
+    }, [pathname]);
     return (
     <Box sx={StyleHeader}>
         <Box>
