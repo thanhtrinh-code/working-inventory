@@ -4,6 +4,7 @@ import { useState } from 'react';
 import InstructionText from './InstructionText';
 import BeginAndReset from './BeginAndReset';
 import CameraButton from './CameraButton';
+import { addItemToInventory } from '@/app/_components/SearchField';
 
 
 
@@ -13,13 +14,23 @@ export default function CameraInstruction({handleCloseCamera, handleBegin, begin
   const [isCapture, setIsCapture] = useState(true);
 
   async function savedImage(){
-    const res = await fetch('/api/message', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image: url })
-    });
-    const data = await res.json();
-    console.log(data);
+    try {
+      const res = await fetch('/api/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: url })
+      });
+      const data = await res.json();
+      const [itemName, department] = data.message.split(':');
+      const item = {
+        itemName: itemName.charAt(0).toUpperCase() + itemName.slice(1),
+        department: department.charAt(0).toUpperCase() + department.slice(1),
+        quantity: 1,
+      }
+      addItemToInventory(item);
+    } catch (error) {
+      console.error(error);
+    }
   }
   function openCamera(){
     setIsCapture(toggle =>!toggle);

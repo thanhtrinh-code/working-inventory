@@ -85,7 +85,6 @@ export async function addItemToInventory(item) {
     createdAt: new Date(),
   });
   toast.success('Item added successfully!');
-  console.log('Document successfully written!');
   }catch(err){
     console.error('Error adding document: ', err);
   }
