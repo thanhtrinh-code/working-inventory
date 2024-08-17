@@ -3,6 +3,7 @@ import {Button, TextField} from '@mui/material';
 import { collection, addDoc } from 'firebase/firestore';
 import {auth, db} from '../../firebase';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 
 
@@ -83,6 +84,8 @@ export async function addItemToInventory(item) {
     quantity: item.quantity,
     createdAt: new Date(),
   });
+  toast.success('Item added successfully!');
+  console.log('Document successfully written!');
   }catch(err){
     console.error('Error adding document: ', err);
   }

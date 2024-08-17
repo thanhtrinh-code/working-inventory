@@ -11,6 +11,7 @@ import MyModal from "./MyModal";
 import RecipeGenerator from "../_RecipeGenerator/RecipeGenerator";
 import MyTableBody from "../_table/MyTableBody";
 import { onAuthStateChanged } from "firebase/auth";
+import { toast } from "react-toastify";
 
 
 const columns = [
@@ -78,8 +79,8 @@ export default function Display() {
       const userId = auth.currentUser.uid;
       const docRef = doc(db, 'users', userId, 'inventory', id);
       try {
-        console.log('deleting inventory for user:');
         await deleteDoc(docRef);
+        toast.success("Deleted successfully!");
       } catch (error) {
         console.error('Error deleting document');
       }
@@ -133,7 +134,7 @@ export default function Display() {
             handleSelectedItems={handleSelectedItems}
             handleOpenModal={handleOpenModal}
             handleDeletePage={handleDeletePage}
-            selectedItems={selectedItems}
+            selectedItems={selectedItems} 
             />
             )}
         </Table>

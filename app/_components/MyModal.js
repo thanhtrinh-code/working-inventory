@@ -1,8 +1,9 @@
 import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "@/firebase";
+import { auth, db } from "@/firebase";
 import { FadeLoader } from "react-spinners";
+import { toast } from "react-toastify";
 
 const style = {
   position: 'absolute',
@@ -28,19 +29,22 @@ export default function MyModal({openModal, handleCloseModal, selectedRow}) {
   const [isLoading, setIsLoading] = useState(true);
 
   async function handleSaveInformation() {
-    const docRef = doc(db, 'inventory', `${selectedRow}`);
+    const userId = auth.currentUser.uid;
+    const docRef = doc(db, 'users', userId, 'inventory', selectedRow);
     await updateDoc(docRef, {
       itemName: item[0].toUpperCase() + item.slice(1),
       quantity: quantity,
       department: department[0].toUpperCase() + department.slice(1),
     })
+    toast.success("Updated successfully!");
     handleCloseModal();
   }
 
   useEffect(() => {
     async function fetchData() {
       if(openModal){
-        const docRef = doc(db, 'inventory', `${selectedRow}`);
+        const userId = auth.currentUser.uid;
+        const docRef = doc(db, 'users', userId, 'inventory', selectedRow);
         const docSnap = await getDoc(docRef);
         if(docSnap.exists()) {
           setItemName(docSnap.data().itemName);
