@@ -1,11 +1,11 @@
-import {Typography } from '@mui/material';
+import {Box, Typography } from '@mui/material';
 import React from 'react'
 
 export default function RecipeCard({randomRecipe}) {
     if(!randomRecipe) return;
     const {label, image, calories, source, url } = randomRecipe;
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+    <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center'}}>
     <img 
         src={image} 
         alt={label}
@@ -15,6 +15,6 @@ export default function RecipeCard({randomRecipe}) {
     <Typography>Calories: {Math.floor(calories)}</Typography>
     <Typography>Source: {source}</Typography>
     <a href={url} style={{ marginTop: '8px' }}>View Recipe</a>
-</div>
+</Box>
   )
 }

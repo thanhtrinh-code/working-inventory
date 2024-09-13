@@ -34,7 +34,6 @@ export default function RecipeGenerator({displayRecipe, handleDisplayRecipe, pre
         {prevSelectedItems.length === 0 && !displayRecipe && <InitialRun/>}
         {displayRecipe && prevSelectedItems.length === 0 && <NoSelectedItems/>}
         {displayRecipe && prevSelectedItems.length > 0 && <GettingRecipe query={query} trigger={trigger}/>}
-        
     </Box>
   )
 }
