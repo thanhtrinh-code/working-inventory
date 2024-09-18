@@ -84,7 +84,7 @@ export async function addItemToInventory(item) {
     quantity: item.quantity,
     createdAt: new Date(),
   });
-  toast.success(`${itemName} added successfully!`);
+  toast.success(`${item.itemName} added successfully!`);
   }catch(err){
     console.error('Error adding document: ', err);
   }
