@@ -2,6 +2,7 @@ import { OpenAIEmbeddings } from "@langchain/openai";
 import {RecursiveCharacterTextSplitter} from 'langchain/text_splitter'
 import {SupabaseVectorStore} from '@langchain/community/vectorstores/supabase'
 import {createClient} from '@supabase/supabase-js'
+import { NextResponse } from "next/server";
 
 export async function GET(){
     try {
@@ -49,11 +50,16 @@ export async function GET(){
             tableName: 'documents',
             queryName: 'match_documents',
         });
-        console.log("Documents inserted into vector store");
+        return new NextResponse(JSON.stringify({ message: 'Documents processed successfully' }), {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
         
     } catch (error) {
         console.error(" Error in retrieval GET", error);
-        return new Response(JSON.stringify({error: "An error occurred in GET request"}), {
+        return new NextResponse(JSON.stringify({error: "An error occurred in GET request"}), {
             status: 500,
             headers: {
                 'Content-Type': 'application/json'
