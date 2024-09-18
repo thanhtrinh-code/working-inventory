@@ -21,7 +21,7 @@ export default function SignInTextAndDivider({handleSignIn, handleGoogleSignIn  
         Or
         </Divider>
         <Box width='100%' display='flex' justifyContent='center'>
-          <Button variant="contained" onClick={handleGoogleSignIn}
+          <Button variant="contained" onClick={handleGoogleSignIn} disabled={true}
           sx={{mt: '10px', color: 'white', backgroundColor: '#5009d8', 
         '&:hover': {backgroundColor: '#5607ed', cursor: 'pointer', color: 'white'}
         }}>

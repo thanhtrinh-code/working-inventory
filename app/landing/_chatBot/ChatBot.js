@@ -73,7 +73,6 @@ export default function ChatBot({ openChat, handleCloseChat }) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
       const data = await res.json();
-      
       setPrevConv((prevHistory) => [
         ...prevHistory,
         {role: 'assistant', content: data.answer},

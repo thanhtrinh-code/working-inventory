@@ -21,7 +21,7 @@ export default function MyButtonAndDivider({handleSubmit, handleGoogleSignUp}) {
     Or
     </Divider>
     <Box width='100%' display='flex' justifyContent='center'>
-      <Button variant="contained" onClick={handleGoogleSignUp}
+      <Button variant="contained" onClick={handleGoogleSignUp} disabled={true}
       sx={{mt: '15px', color: 'white', backgroundColor: '#5009d8', 
     '&:hover': {backgroundColor: '#5607ed', cursor: 'pointer', color: 'white'}
     }}>
