@@ -43,6 +43,16 @@ const StylesSignIn = {
         color: 'white',
       },
 }
+const StyleGuest = {
+    bgcolor: '#ffa53d', 
+    color: 'black', 
+    borderRadius: '16px',
+    border: '1px solid grey',
+    '&:hover': {
+        backgroundColor: '#eb7d00',
+        color: 'white',
+      },
+}
 export default function Header() {
     const pathname = usePathname();
     const router = useRouter();
@@ -93,6 +103,9 @@ export default function Header() {
         <Box sx={StyleMenus}>
             {pathname === '/' && (
             <>
+                <Button variant='outlined' sx={StyleGuest} onClick={() => router.push('/signin?user=guest')}>
+                    Continue as Guest
+                </Button>
                 <Button variant='outlined' sx={StylesSignIn} onClick={() => router.push('/signin')}>
                     Sign In
                 </Button>

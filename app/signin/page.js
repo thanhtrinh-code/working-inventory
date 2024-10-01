@@ -1,16 +1,21 @@
 'use client'
 import { Box, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SignInTextAndDivider from "./_textSignin/SignInTextAndDivider";
 import { signInWithEmailAndPassword, signInWithPopup} from 'firebase/auth';
 import {auth, provider} from '../../firebase';
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
-  const [signinEmail, setEmail] = useState('');
-  const [signinPassword, setPassword] = useState('');
+  const search = useSearchParams();
+  const guest = search.get('user');
+
+  const [signinEmail, setEmail] = useState(guest ? 'test@test.com' : '');
+  const [signinPassword, setPassword] = useState(guest ? 'guest123@' : '');
   const [error, setError] = useState('');
+
+
   async function handleSignIn(e){
     e.preventDefault();
     // Perform sign in logic here
@@ -78,12 +83,17 @@ export default function Page() {
         sx={{fontWeight: 'bold', fontFamily: 'times', ml: '35px', mb: '10px'}}>
           Sign In
         </Typography>
-          <input value={signinEmail} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required
-          style={{width: '75%', height: '2.2rem', marginLeft: '35px', borderRadius: 20, paddingLeft: '20px', fontSize: '15px'}}/>
-          <input value={signinPassword} onChange={(e) => setPassword(e.target.value)} placeholder="Password" type="password" required
-          style={{width: '75%', height: '2.2rem', marginLeft: '35px', marginBottom: '3px' ,borderRadius: 20, paddingLeft: '20px', fontSize: '15px'}}/>
+          <input value={signinEmail} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required disabled={guest}
+          style={{width: '75%', height: '2.2rem', marginLeft: '35px', borderRadius: 20, paddingLeft: '20px', fontSize: '15px', 
+          backgroundColor: 'white'
+          }}/>
+          <input value={signinPassword} onChange={(e) => setPassword(e.target.value)} placeholder="Password" type="password" required disabled={guest}
+          style={{width: '75%', height: '2.2rem', marginLeft: '35px', marginBottom: '3px' ,borderRadius: 20, paddingLeft: '20px', fontSize: '15px',
+          backgroundColor: 'white'
+          }}/>
           <p style={{marginTop: 2, marginBottom: 0, marginLeft: '50px', fontSize: '15px', color: 'red'}}>
             {error && error}
+            {guest && "Hit the sign in button to continue"}
           </p>
         </Box>
         <SignInTextAndDivider handleSignIn={handleSignIn}
