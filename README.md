@@ -1,38 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🫑 StockPoint 🧂
+StockPoint is an all-in-one pantry and refrigerator management application that helps users keep track of their food inventory. It combines three key features: a tracker to monitor available ingredients, a chef that suggests recipes based on what’s in stock, and an expiration date tracker that alerts users about soon-to-expire items. With StockPoint, users can reduce food waste, plan meals more efficiently, and spend less time thinking about what recipe they could make with their available resources they have.
 
-## Getting Started
 
-First, run the development server:
+## Table of Contents
+- [Features](#features)
+- [Technologies](#technologies)
+- [Deployment](#deployment)
+- [Demo](#demo)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
+- **Authentication** Each user will be able to create their own account and track their own pantry
+- **Create, Edit, Delete Item:** Easily manage your items with create, edit, and delete functionalities.
+- **Recipe Generator:** A push of button and a recipe will be generated based on the items in the inventory
+- **ChatBot:** A chatbot that was trainined to answer any question related to health, diet and working out
+- **Create with Photo:** Take a picture of the item and the application will do the rest.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies
+- **Tech Stack**: Next.js, HTML, CSS, Material UI, OpenAi, Langchain, Supabase, TensorFlow
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Deployment
+StockPoint is deployed and accessible at the following URL: [StockPoint](https://stock-point.vercel.app).
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Demo
+Here’s a demo of StockPoint:
 
-## Learn More
+[![YouTube](http://i.ytimg.com/vi/iqfY54_vvp8/hqdefault.jpg)](https://www.youtube.com/watch?v=ABxMMBhCJvY)
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+**Happy Studying with SmartFlash!**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-# inventory-management-with-chat-bot
-# working-inventory
